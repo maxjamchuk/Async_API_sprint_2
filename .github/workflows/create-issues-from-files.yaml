@@ -14,15 +14,9 @@ jobs:
 
       - name: Create 00_review issue From File
         working-directory: Async_API_sprint_2
-        run: |
+        run:
           ls -la
-        uses: peter-evans/create-issue-from-file@v4
-        with:
-          title: 00_review
-          content-filepath: ./.github/workflows/tasks/00_review.md
-          labels:
-            report
-            automated issue
+
 
       - name: Create 01_SOLID_ES issue From File
         uses: peter-evans/create-issue-from-file@v4
