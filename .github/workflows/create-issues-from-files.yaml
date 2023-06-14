@@ -1,0 +1,8 @@
+name: Create Issues From Files
+uses: peter-evans/create-issue-from-file@v4
+with:
+  title: An example issue
+  content-filepath: ./tasks/00_rewiev.md
+  labels:
+    report
+    automated issue
