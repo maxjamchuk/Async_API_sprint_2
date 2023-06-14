@@ -1,8 +1,25 @@
-name: Create Issues From Files
-uses: peter-evans/create-issue-from-file@v4
-with:
-  title: An example issue
-  content-filepath: ./tasks/00_rewiev.md
-  labels:
-    report
-    automated issue
+# название
+name: Project test & build
+
+on:
+  push:
+    branches: [ main ]
+
+# выполняемые действия
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    # запускаются по шагам
+    # name - название шага
+    # в github actions будет выводиться название шага, и процессы
+    steps:
+
+      - name: Create Issues From Files
+        uses: peter-evans/create-issue-from-file@v4
+        with:
+          title: An example issue
+          content-filepath: ./tasks/00_review.md
+          labels:
+            report
+            automated issue
