@@ -14,12 +14,12 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Create 00_review issue From File
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: 00_review
-          content-filepath: ./Async_API_sprint_2/.github/workflows/tasks/00_review.md
+          content-filepath: /home/runner/work/Async_API_sprint_2/Async_API_sprint_2/.github/workflows/tasks/00_review.md
           labels:
             report
             automated issue
