@@ -11,15 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Check PlatformIO
-        run: |
-          pio system info
-
       - name: Create 00_review issue From File
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: 00_review
-          content-filepath: .github/workflows/tasks/00_review.md
+          content-filepath: ./.github/workflows/tasks/00_review.md
           labels:
             report
             automated issue
