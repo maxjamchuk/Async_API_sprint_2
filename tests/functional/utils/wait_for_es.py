@@ -1,10 +1,19 @@
-import time
+import asyncio
 
-from elasticsearch import Elasticsearch
+from elasticsearch import AsyncElasticsearch
 
-if __name__ == '__main__':
-    es_client = Elasticsearch(hosts='http://localhost:9200')
-    while True:
-        if es_client.ping():
-            break
-        time.sleep(1)
+
+async def elastic_connect(host: str) -> AsyncElasticsearch:
+    elastic = AsyncElasticsearch(hosts=host)
+    if not await elastic.ping():
+        raise ConnectionError("Connection failed")
+    return elastic
+
+
+async def main():
+    es = await elastic_connect(host=["http://elasticsearch:9200"])
+    await es.close()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
