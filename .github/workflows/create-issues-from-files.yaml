@@ -35,97 +35,107 @@ jobs:
         id: ciff
         with:
           title: 00_review
-          content-filepath: ./.github/workflows/tasks/00_review.md
+          content-filepath: ./tasks/00_review.md
           labels: |
-            report
+            code review
             automated issue
 
-      # - name: Create 01_SOLID_ES issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: 01_SOLID_ES
-      #     content-filepath: ./tasks/01_SOLID_ES.md
-      #     labels:
-      #       report
-      #       automated issue
+      - name: Create 01_SOLID_ES issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        id: ciff
+        with:
+          title: 01_SOLID_ES
+          content-filepath: ./tasks/01_SOLID_ES.md
+          labels: |
+            SOLIDization
+            automated issue
 
-      # - name: Create 02_SOLID_redis issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: 02_SOLID_redis
-      #     content-filepath: ./tasks/02_SOLID_redis.md
-      #     labels:
-      #       report
-      #       automated issue
+      - name: Create 02_SOLID_redis issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        id: ciff
+        with:
+          title: 02_SOLID_redis
+          content-filepath: ./tasks/02_SOLID_redis.md
+          labels: |
+            SOLIDization
+            automated issue
 
-      # - name: Create 03_SOLID_views issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: 03_SOLID_views
-      #     content-filepath: ./tasks/03_SOLID_views.md
-      #     labels:
-      #       report
-      #       automated issue
+      - name: Create 03_SOLID_views issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        id: ciff
+        with:
+          title: 03_SOLID_views
+          content-filepath: ./tasks/03_SOLID_views.md
+          labels: |
+            SOLIDization
+            automated issue
 
-      # - name: Create 04_functional_test_infra issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: 04_functional_test_infra
-      #     content-filepath: ./tasks/04_functional_test_infra.md
-      #     labels:
-      #       report
-      #       automated issue
+      - name: Create 04_functional_test_infra issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        id: ciff
+        with:
+          title: 04_functional_test_infra
+          content-filepath: ./tasks/04_functional_test_infra.md
+          labels: |
+            enhancement
+            automated issue
 
-      # - name: Create 05_functional_test_film issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: 05_functional_test_film
-      #     content-filepath: ./tasks/05_functional_test_film.md
-      #     labels:
-      #       report
-      #       automated issue
+      - name: Create 05_functional_test_film issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        id: ciff
+        with:
+          title: 05_functional_test_film
+          content-filepath: ./tasks/05_functional_test_film.md
+          labels: |
+            enhancement
+            automated issue
 
-      # - name: Create 06_functional_test_person issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: 06_functional_test_person
-      #     content-filepath: ./tasks/06_functional_test_person.md
-      #     labels:
-      #       report
-      #       automated issue
+      - name: Create 06_functional_test_person issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        id: ciff
+        with:
+          title: 06_functional_test_person
+          content-filepath: ./tasks/06_functional_test_person.md
+          labels: |
+            enhancement
+            automated issue
 
-      # - name: Create 07_functional_test_genre issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: 07_functional_test_genre
-      #     content-filepath: ./tasks/07_functional_test_genre.md
-      #     labels:
-      #       report
-      #       automated issue
+      - name: Create 07_functional_test_genre issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        id: ciff
+        with:
+          title: 07_functional_test_genre
+          content-filepath: ./tasks/07_functional_test_genre.md
+          labels: |
+            enhancement
+            automated issue
 
-      # - name: Create 08_functional_test_search issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: 08_functional_test_search
-      #     content-filepath: ./tasks/08_functional_test_search.md
-      #     labels:
-      #       report
-      #       automated issue
+      - name: Create 08_functional_test_search issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        id: ciff
+        with:
+          title: 08_functional_test_search
+          content-filepath: ./tasks/08_functional_test_search.md
+          labels: |
+            enhancement
+            automated issue
 
-      # - name: Create 09_openapi issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: 09_openapi
-      #     content-filepath: ./tasks/09_openapi.md
-      #     labels:
-      #       report
-      #       automated issue
+      - name: Create 09_openapi issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        id: ciff
+        with:
+          title: 09_openapi
+          content-filepath: ./tasks/09_openapi.md
+          labels: |
+            enhancement
+            automated issue
 
-      # - name: Create 10_backoff issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: 10_backoff
-      #     content-filepath: ./tasks/10_backoff.md
-      #     labels:
-      #       report
-      #       automated issue
+      - name: Create 10_backoff issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        id: ciff
+        with:
+          title: 10_backoff
+          content-filepath: ./tasks/10_backoff.md
+          labels: |
+            enhancement
+            automated issue
