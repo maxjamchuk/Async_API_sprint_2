@@ -16,7 +16,7 @@ jobs:
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: 00_review
-          content-filepath: tasks/00_review.md
+          content-filepath: .github/workflows/tasks/00_review.md
           labels:
             report
             automated issue
