@@ -11,8 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Get directory
-        run: ls
+      - name: Check PlatformIO
+        run: |
+          pio system info
 
       - name: Create 00_review issue From File
         uses: peter-evans/create-issue-from-file@v4
