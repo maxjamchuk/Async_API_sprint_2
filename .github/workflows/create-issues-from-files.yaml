@@ -10,16 +10,13 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     
-    # запускаются по шагам
-    # name - название шага
-    # в github actions будет выводиться название шага, и процессы
     steps:
 
       - name: Create Issues From Files
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: An example issue
-          content-filepath: ./tasks/00_review.md
+          content-filepath: ./tasks/*
           labels:
             report
             automated issue
