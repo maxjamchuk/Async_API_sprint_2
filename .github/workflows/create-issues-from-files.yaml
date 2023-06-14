@@ -1,141 +1,140 @@
-# название
-name: Project test & build
+# # название
+# name: Project test & build
 
-on:
-  push:
-    branches: [ main ]
+# on:
+#   push:
+#     branches: [ main ]
 
-# выполняемые действия
-jobs:
-  createIssueFromFile:
-    runs-on: ubuntu-latest
+# jobs:
+#   createIssueFromFile:
+#     runs-on: ubuntu-latest
 
-    permissions: write-all
+#     permissions: write-all
     
-    steps:
+#     steps:
 
-      - name: Get the target repository and branch
-        id: vars
-        run: |
-          repository=${{ github.event.client_payload.slash_command.repository }}
-          if [[ -z "$repository" ]]; then repository=${{ github.repository }}; fi
-          echo ::set-output name=repository::$repository
-          branch=${{ github.event.client_payload.slash_command.branch }}
-          if [[ -z "$branch" ]]; then branch="main"; fi
-          echo ::set-output name=branch::$branch
+#       - name: Get the target repository and branch
+#         id: vars
+#         run: |
+#           repository=${{ github.event.client_payload.slash_command.repository }}
+#           if [[ -z "$repository" ]]; then repository=${{ github.repository }}; fi
+#           echo ::set-output name=repository::$repository
+#           branch=${{ github.event.client_payload.slash_command.branch }}
+#           if [[ -z "$branch" ]]; then branch="main"; fi
+#           echo ::set-output name=branch::$branch
     
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ steps.vars.outputs.repository }}
-          ref: ${{ steps.vars.outputs.branch }}
+#       - name: Checkout
+#         uses: actions/checkout@v2
+#         with:
+#           repository: ${{ steps.vars.outputs.repository }}
+#           ref: ${{ steps.vars.outputs.branch }}
 
-      - name: Create 00_review issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff00
-        with:
-          title: 00_review
-          content-filepath: ./tasks/00_review.md
-          labels: |
-            code review
-            automated issue
+#       - name: Create 00_review issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff00
+#         with:
+#           title: 00_review
+#           content-filepath: ./tasks/00_review.md
+#           labels: |
+#             code review
+#             automated issue
 
-      - name: Create 01_SOLID_ES issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff01
-        with:
-          title: 01_SOLID_ES
-          content-filepath: ./tasks/01_SOLID_ES.md
-          labels: |
-            SOLIDization
-            automated issue
+#       - name: Create 01_SOLID_ES issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff01
+#         with:
+#           title: 01_SOLID_ES
+#           content-filepath: ./tasks/01_SOLID_ES.md
+#           labels: |
+#             SOLIDization
+#             automated issue
 
-      - name: Create 02_SOLID_redis issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff02
-        with:
-          title: 02_SOLID_redis
-          content-filepath: ./tasks/02_SOLID_redis.md
-          labels: |
-            SOLIDization
-            automated issue
+#       - name: Create 02_SOLID_redis issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff02
+#         with:
+#           title: 02_SOLID_redis
+#           content-filepath: ./tasks/02_SOLID_redis.md
+#           labels: |
+#             SOLIDization
+#             automated issue
 
-      - name: Create 03_SOLID_views issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff03
-        with:
-          title: 03_SOLID_views
-          content-filepath: ./tasks/03_SOLID_views.md
-          labels: |
-            SOLIDization
-            automated issue
+#       - name: Create 03_SOLID_views issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff03
+#         with:
+#           title: 03_SOLID_views
+#           content-filepath: ./tasks/03_SOLID_views.md
+#           labels: |
+#             SOLIDization
+#             automated issue
 
-      - name: Create 04_functional_test_infra issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff04
-        with:
-          title: 04_functional_test_infra
-          content-filepath: ./tasks/04_functional_test_infra.md
-          labels: |
-            enhancement
-            automated issue
+#       - name: Create 04_functional_test_infra issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff04
+#         with:
+#           title: 04_functional_test_infra
+#           content-filepath: ./tasks/04_functional_test_infra.md
+#           labels: |
+#             enhancement
+#             automated issue
 
-      - name: Create 05_functional_test_film issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff05
-        with:
-          title: 05_functional_test_film
-          content-filepath: ./tasks/05_functional_test_film.md
-          labels: |
-            enhancement
-            automated issue
+#       - name: Create 05_functional_test_film issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff05
+#         with:
+#           title: 05_functional_test_film
+#           content-filepath: ./tasks/05_functional_test_film.md
+#           labels: |
+#             enhancement
+#             automated issue
 
-      - name: Create 06_functional_test_person issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff06
-        with:
-          title: 06_functional_test_person
-          content-filepath: ./tasks/06_functional_test_person.md
-          labels: |
-            enhancement
-            automated issue
+#       - name: Create 06_functional_test_person issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff06
+#         with:
+#           title: 06_functional_test_person
+#           content-filepath: ./tasks/06_functional_test_person.md
+#           labels: |
+#             enhancement
+#             automated issue
 
-      - name: Create 07_functional_test_genre issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff07
-        with:
-          title: 07_functional_test_genre
-          content-filepath: ./tasks/07_functional_test_genre.md
-          labels: |
-            enhancement
-            automated issue
+#       - name: Create 07_functional_test_genre issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff07
+#         with:
+#           title: 07_functional_test_genre
+#           content-filepath: ./tasks/07_functional_test_genre.md
+#           labels: |
+#             enhancement
+#             automated issue
 
-      - name: Create 08_functional_test_search issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff08
-        with:
-          title: 08_functional_test_search
-          content-filepath: ./tasks/08_functional_test_search.md
-          labels: |
-            enhancement
-            automated issue
+#       - name: Create 08_functional_test_search issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff08
+#         with:
+#           title: 08_functional_test_search
+#           content-filepath: ./tasks/08_functional_test_search.md
+#           labels: |
+#             enhancement
+#             automated issue
 
-      - name: Create 09_openapi issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff09
-        with:
-          title: 09_openapi
-          content-filepath: ./tasks/09_openapi.md
-          labels: |
-            enhancement
-            automated issue
+#       - name: Create 09_openapi issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff09
+#         with:
+#           title: 09_openapi
+#           content-filepath: ./tasks/09_openapi.md
+#           labels: |
+#             enhancement
+#             automated issue
 
-      - name: Create 10_backoff issue From File
-        uses: peter-evans/create-issue-from-file@v4
-        id: ciff10
-        with:
-          title: 10_backoff
-          content-filepath: ./tasks/10_backoff.md
-          labels: |
-            enhancement
-            automated issue
+#       - name: Create 10_backoff issue From File
+#         uses: peter-evans/create-issue-from-file@v4
+#         id: ciff10
+#         with:
+#           title: 10_backoff
+#           content-filepath: ./tasks/10_backoff.md
+#           labels: |
+#             enhancement
+#             automated issue
