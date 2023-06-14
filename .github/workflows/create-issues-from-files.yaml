@@ -22,13 +22,15 @@ jobs:
           if [[ -z "$branch" ]]; then branch="main"; fi
           echo ::set-output name=branch::$branch
     
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
           repository: ${{ steps.vars.outputs.repository }}
           ref: ${{ steps.vars.outputs.branch }}
 
       - name: Create 00_review issue From File
         uses: peter-evans/create-issue-from-file@v4
+        id: ciff
         with:
           title: 00_review
           content-filepath: ./.github/workflows/tasks/00_review.md
