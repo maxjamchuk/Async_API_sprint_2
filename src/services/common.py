@@ -39,9 +39,9 @@ class Common:
             FIND_PERSONS_BY_QUERY['multi_match']['query'] = values[0]
             return FIND_PERSONS_BY_QUERY
         if type == 'films_by_persons':
-            FIND_FILMS_BY_PERSONS['bool']['should'][0]['nested']['query']['bool']['must'][0]['terms']['actors.id'] = values
-            FIND_FILMS_BY_PERSONS['bool']['should'][1]['nested']['query']['bool']['must'][0]['terms']['writers.id'] = values
-            FIND_FILMS_BY_PERSONS['bool']['should'][2]['nested']['query']['bool']['must'][0]['terms']['directors.id'] = values
+            FIND_FILMS_BY_PERSONS['bool']['should'][0]['nested']['query']['terms']['actors.id'] = values
+            FIND_FILMS_BY_PERSONS['bool']['should'][1]['nested']['query']['terms']['writers.id'] = values
+            FIND_FILMS_BY_PERSONS['bool']['should'][2]['nested']['query']['terms']['directors.id'] = values
             return FIND_FILMS_BY_PERSONS
         if type == 'all':
             return FIND_ALL

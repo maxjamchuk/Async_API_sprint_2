@@ -60,7 +60,6 @@ async def films(
     pages: Annotated[PaginateQueryParams, Depends()],
     film_service: FilmService = Depends(get_film_service),
     genre: uuid.UUID = None,
-    # sort_param: str = '-imdb_raiting',
     sort_param: str = Query(default='-imdb_raiting', title="Sort by field.", description="Sorting by field in films"),
     
 ) -> List[ShortFilm]:

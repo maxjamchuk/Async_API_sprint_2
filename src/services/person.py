@@ -49,38 +49,38 @@ class PersonService(Common):
             )
 
             person_ids = [row['_source'].get('id') for row in persons["hits"]["hits"]]
-            films = await self._search(
-                index='movies',
-                query=self.prepare_query(type='films_by_persons', values=person_ids),
-                from_=page_number,
-                size=page_size
-            )
-            result = []
-            for per in persons["hits"]["hits"]:
+            if len(person_ids):
+                films = await self._search(
+                    index='movies',
+                    query=self.prepare_query(type='films_by_persons', values=person_ids),
+                )
 
-                per_id = per['_source'].get('id')
-                full_name = per['_source'].get('full_name')
-                new_films = []
-                for fil in films["hits"]["hits"]:
-                    roles = []
-                    if full_name in fil['_source'].get('director'):
-                        roles.append('director')
-                    if full_name in fil['_source'].get('actors_names'):
-                        roles.append('actor')
-                    if full_name in fil['_source'].get('writers_names'):
-                        roles.append('writer')
+                result = []
+                for per in persons["hits"]["hits"]:
 
-                    if len(roles) == 0:
-                        continue
-                    new_films.append({'uuid': fil['_source'].get('id'), 'roles': roles})
+                    per_id = per['_source'].get('id')
+                    full_name = per['_source'].get('full_name')
+                    new_films = []
+                    for film in films["hits"]["hits"]:
+                        roles = []
+                        if full_name in film['_source'].get('director'):
+                            roles.append('director')
+                        if full_name in film['_source'].get('actors_names'):
+                            roles.append('actor')
+                        if full_name in film['_source'].get('writers_names'):
+                            roles.append('writer')
 
-                result.append(Person(
-                    uuid=per_id,
-                    full_name=full_name,
-                    films=new_films
-                ))
-            return result
+                        if len(roles) == 0:
+                            continue
+                        new_films.append({'uuid': film['_source'].get('id'), 'roles': roles})
 
+                    result.append(Person(
+                        uuid=per_id,
+                        full_name=full_name,
+                        films=new_films
+                    ))
+                return result
+            return None
         except NotFoundError:
             return None
 
