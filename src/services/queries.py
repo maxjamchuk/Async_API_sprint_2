@@ -85,68 +85,47 @@ FIND_FILMS_BY_QUERY = {
 }
 
 FIND_PERSONS_BY_QUERY = {
-    'multi_match': {
-        'query':  '',
-        'fields': [
-            'full_name',
-            'full_name.raw'
-        ]
+"multi_match" : {
+        "query": "",
+        "fields" : ["full_name", "full_name.raw"],
+        "operator": "or"
     }
 }
 
 
 FIND_FILMS_BY_PERSONS = {
-    'bool': {
-        'should':
-            [
-                {
-                    'nested': {
-                        'path': 'actors',
-                        'query': {
-                            'bool': {
-                                'must': [
-                                    {
-                                            'terms': {
-                                                        'actors.id': ''
-                                            }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                {
-                    'nested': {
-                        'path': 'writers',
-                        'query': {
-                            'bool': {
-                                'must': [
-                                    {
-                                            'terms': {
-                                                'writers.id': ''
-                                            }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                {
-                    'nested': {
-                        'path': 'directors',
-                        'query': {
-                            'bool': {
-                                'must': [
-                                    {
-                                            'terms': {
-                                                'directors.id': ''
-                                            }
-                                    }
-                                ]
-                            }
+    "bool" : {
+        "should" : [
+            {
+                "nested": {
+                    "path": "actors",
+                    "query": {
+                        "terms": {
+                            "actors.id": ""
                         }
                     }
                 }
-            ]
+            },
+            {
+                "nested": {
+                    "path": "writers",
+                    "query": {
+                        "terms": {
+                            "writers.id": ""
+                        }
+                    }
+                }
+            },
+            {
+                "nested": {
+                    "path": "directors",
+                    "query": {
+                        "terms": {
+                            "directors.id": ""
+                        }
+                    }
+                }
+            }
+        ]
     }
 }
