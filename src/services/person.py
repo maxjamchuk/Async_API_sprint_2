@@ -48,7 +48,7 @@ class PersonService(Common):
                 sort='_score'
             )
 
-            person_ids = [row['_source'].get('id') for row in persons["hits"]["hits"]]
+            person_ids = [str(row['_source'].get('id')) for row in persons["hits"]["hits"]]
             if len(person_ids):
                 films = await self._search(
                     index='movies',
@@ -63,11 +63,11 @@ class PersonService(Common):
                     new_films = []
                     for film in films["hits"]["hits"]:
                         roles = []
-                        if full_name in film['_source'].get('director'):
+                        if per_id in [actor.get('id') for actor in film['_source'].get('directors')]:
                             roles.append('director')
-                        if full_name in film['_source'].get('actors_names'):
+                        if per_id in [actor.get('id') for actor in film['_source'].get('actors')]:
                             roles.append('actor')
-                        if full_name in film['_source'].get('writers_names'):
+                        if per_id in [actor.get('id') for actor in film['_source'].get('writers')]:
                             roles.append('writer')
 
                         if len(roles) == 0:
@@ -113,11 +113,11 @@ class PersonService(Common):
         films = []
         for row in search_films['hits']['hits']:
             roles = []
-            if full_name in row['_source'].get('director'):
+            if person_id in [actor.get('id') for actor in row['_source'].get('directors')]:
                 roles.append('director')
-            if full_name in row['_source'].get('actors_names'):
+            if person_id in [actor.get('id') for actor in row['_source'].get('actors')]:
                 roles.append('actor')
-            if full_name in row['_source'].get('writers_names'):
+            if person_id in [actor.get('id') for actor in row['_source'].get('writers')]:
                 roles.append('writer')
 
             films.append({'uuid': row['_source'].get('id'), 'roles': roles})
