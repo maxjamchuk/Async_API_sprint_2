@@ -86,6 +86,5 @@ async def test_film_by_id(
         assert data_response.get('detail')[0].get('msg') == expected_answer.get('msg')
 
     if 'full_return' in expected_answer.keys():
-        print('RESPONSE: ', data_response)
         assert data_response.get('title') == expected_answer.get('full_return').get('title')
         assert data_response.get('imdb_raiting') == expected_answer.get('full_return').get('imdb_raiting')
