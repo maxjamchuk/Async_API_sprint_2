@@ -5,6 +5,7 @@ from typing import Coroutine, Dict, Union
 
 from ..settings import test_settings as sett
 from ..testdata.film import (
+    UUIDS_FILMS,
     ES_FILM_SEARCH_GEN_DATA,
     ES_FILM_SEARCH_PARAMETRIZE_POSITIVE_DATA,
     ES_FILM_SEARCH_PARAMETRIZE_NEGATIVE_DATA,
@@ -42,8 +43,8 @@ async def test_search(
     
     # load data into es
     es_data = []
-    for _ in range(60):
-        ES_FILM_SEARCH_GEN_DATA['id'] = uuid.uuid4()
+    for film_id in UUIDS_FILMS:
+        ES_FILM_SEARCH_GEN_DATA['id'] = film_id
         es_data.append(ES_FILM_SEARCH_GEN_DATA.copy())
 
     await es_write_data(data=es_data, index='movies')
