@@ -43,6 +43,7 @@ async def test_search(
     
     # load data into es
     es_data = []
+
     for film_id in UUIDS_FILMS:
         ES_FILM_SEARCH_GEN_DATA['id'] = film_id
         es_data.append(ES_FILM_SEARCH_GEN_DATA.copy())
