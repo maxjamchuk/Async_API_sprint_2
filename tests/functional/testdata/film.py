@@ -209,3 +209,4 @@ ES_FILM_BY_ID_PARAMETRIZE_NEGATIVE_DATA = [
         {'film_id': 123},
         {'status': 422, 'length': 1, 'msg': 'value is not a valid uuid'}
     )
+]
