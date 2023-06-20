@@ -20,7 +20,7 @@ class TestSettings(BaseSettings):
     # Настройки Elasticsearch
     elastic_host: str = os.getenv("ELASTIC_HOST", "127.0.0.1")
     elastic_port: int = int(os.getenv("ELASTIC_PORT", 9200))
-    elastic_scheme: str = os.getenv("ELASTIC_SCHEME", "http")
+    elastic_scheme: str = os.getenv("ELASTIC_SCHEME", "http://")
 
     # Корень проекта
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
