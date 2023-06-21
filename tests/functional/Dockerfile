@@ -10,6 +10,7 @@ COPY ./elastic/index_persons.json /tests/functional/index_persons.json
 COPY ./elastic/index_movies.json /tests/functional/index_movies.json
 COPY ./tests/functional/ /tests/functional/
 
+
 RUN apt-get -qq update
 RUN apt-get -y install curl
 RUN pip install --no-cache-dir -r /tests/functional/requirements.txt
