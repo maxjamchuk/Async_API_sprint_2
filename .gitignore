@@ -134,3 +134,4 @@ dmypy.json
 .fleet/
 garbage/
 t.py
+.scannerwork

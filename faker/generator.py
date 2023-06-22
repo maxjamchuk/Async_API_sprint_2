@@ -6,27 +6,30 @@ from tqdm import tqdm
 from faker import Faker
 
 
+ORDER_DIRECTION = 'uuid generate'
+
+
 class GeneratorMovies:
 
     fake = Faker()
 
     def g_genres(self, count: int) -> pd.DataFrame:
 
-        randoms_uuid = {uuid.uuid4() for _ in tqdm(range(count), desc='uuid generate')}
+        randoms_uuid = {uuid.uuid4() for _ in tqdm(range(count), desc=ORDER_DIRECTION)}
         random_name = [self.fake.word() for _ in tqdm(range(count), desc="genre generate")]
         random_description = [self.fake.text(max_nb_chars=160) for _ in tqdm(range(count), desc="description genre generate")]
 
         df = pd.DataFrame({
             'id': list(randoms_uuid),
             'name': random_name,
-            'description': random_description
+            'description': random_description,
         })
         self.genres = df
         return self.genres
 
     def g_persons(self, count: int) -> pd.DataFrame:
 
-        randoms_uuid = {uuid.uuid4() for _ in tqdm(range(count), desc='uuid generate')}
+        randoms_uuid = {uuid.uuid4() for _ in tqdm(range(count), desc=ORDER_DIRECTION)}
         randoms_uuid = randoms_uuid - set(self.genres.id.tolist())
 
         while True:
@@ -38,14 +41,14 @@ class GeneratorMovies:
         random_name = [self.fake.name() for _ in tqdm(range(count), desc="generate names")]
         df = pd.DataFrame({
                     'id': list(randoms_uuid),
-                    'name': random_name
+                    'name': random_name,
                 })
         self.persons = df
         return df
 
     def g_movies(self, count: int) -> pd.DataFrame:
 
-        randoms_uuid = {uuid.uuid4() for _ in tqdm(range(count), desc='uuid generate')}
+        randoms_uuid = {uuid.uuid4() for _ in tqdm(range(count), desc=ORDER_DIRECTION)}
         randoms_uuid = randoms_uuid - set(self.genres.id.tolist()) - set(self.persons.id.tolist())
 
         while True:
@@ -87,7 +90,7 @@ class GeneratorMovies:
             'actors': actors,
             'writers': writers,
             'directors': directors,
-            'genres': genres
+            'genres': genres,
         })
 
     def common_generate(self, type: str, filter_list: list) -> list:

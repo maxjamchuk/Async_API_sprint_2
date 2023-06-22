@@ -1,17 +1,16 @@
 LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-LOG_DEFAULT_HANDLERS = ['console', ]
+LOG_DEFAULT_HANDLERS = [
+    'console',
+]
+HANDLER_CLASS = 'logging.StreamHandler'
 
-# В логгере настраивается логгирование uvicorn-сервера.
-# Про логирование в Python можно прочитать в документации
-# https://docs.python.org/3/howto/logging.html
-# https://docs.python.org/3/howto/logging-cookbook.html
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': LOG_FORMAT
+            'format': LOG_FORMAT,
         },
         'default': {
             '()': 'uvicorn.logging.DefaultFormatter',
@@ -26,17 +25,17 @@ LOGGING = {
     'handlers': {
         'console': {
             'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
+            'class': HANDLER_CLASS,
             'formatter': 'verbose',
         },
         'default': {
             'formatter': 'default',
-            'class': 'logging.StreamHandler',
+            'class': HANDLER_CLASS,
             'stream': 'ext://sys.stdout',
         },
         'access': {
             'formatter': 'access',
-            'class': 'logging.StreamHandler',
+            'class': HANDLER_CLASS,
             'stream': 'ext://sys.stdout',
         },
     },
