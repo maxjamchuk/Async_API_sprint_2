@@ -15,7 +15,7 @@ class PersonService(Common):
     INDEX = 'persons'
 
     @staticmethod
-    def _create_persons_list(person_id: uuid.UUID, source: List[str]) -> List[str]:
+    def _create_roles_list(person_id: uuid.UUID, source: List[str]) -> List[str]:
 
         abstract_list = []
 
@@ -81,7 +81,7 @@ class PersonService(Common):
 
                     per_id = per['_source'].get('id')
                     full_name = per['_source'].get('full_name')
-                    new_films = self._create_persons_list(per_id, films['hits']['hits'])
+                    new_films = self._create_roles_list(per_id, films['hits']['hits'])
 
                     result.append(Person(
                         uuid=per_id,
@@ -105,7 +105,7 @@ class PersonService(Common):
                 index='movies',
                 query=self.prepare_query(type='films_by_person', values=[person_id]),
             )
-        films = self._create_persons_list(person_id=person_id, source=search_films['hits']['hits'])
+        films = self._create_roles_list(person_id=person_id, source=search_films['hits']['hits'])
 
         return films
 
