@@ -38,8 +38,8 @@ ES_GENRES_PARAMETRIZE_POSITIVE_DATA = [
 
 ES_GENRES_PARAMETRIZE_NEGATIVE_DATA = [
     (
-        {'genre': '123', 'page_number': 0, 'page_size': 50},
-        {'status': 422, 'length': 1, 'msg': 'value is not a valid uuid'}
+        {'genre': 'nonexistent_genre_id', 'page_number': 0, 'page_size': 50},
+        {'status': 422, 'length': 1, 'msg': 'Genre not found'}
     ),
     (
         {'genre': '0cc0ee04-e27c-4c5a-a157-a408e799b651', 'page_number': -1, 'page_size': 50},
@@ -77,10 +77,10 @@ ES_GENRE_BY_ID_PARAMETRIZE_POSITIVE_DATA = [
 ES_GENRE_BY_ID_PARAMETRIZE_NEGATIVE_DATA = [
     (
         {'genre_id': '123'},
-        {'status': 404, 'length': 1, 'msg': 'value is not a valid uuid'}
+        {'status': 404, 'length': 1, 'msg': 'Genre not found'}
     ),
     (
         {'genre_id': 123},
-        {'status': 404, 'length': 1, 'msg': 'value is not a valid uuid'}
+        {'status': 404, 'length': 1, 'msg': 'Genre not found'}
     )
 ]

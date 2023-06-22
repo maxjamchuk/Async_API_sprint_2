@@ -13,6 +13,15 @@ from ..testdata.genre import (
     ES_GENRE_BY_ID_PARAMETRIZE_NEGATIVE_DATA
 )
 
+
+@pytest.fixture
+@pytest.mark.anyio
+async def loaded_genres(es_write_data: Coroutine):
+    await es_write_data('genres', UUIDS_GENRES, ES_GENRE_GEN_DATA)
+    yield
+    await es_write_data('genres', UUIDS_GENRES, delete=True)
+
+
 @pytest.mark.parametrize(
     'query_data, expected_answer',
     ES_GENRES_PARAMETRIZE_POSITIVE_DATA + ES_GENRES_PARAMETRIZE_NEGATIVE_DATA
@@ -60,9 +69,15 @@ async def test_get_genre_by_id(
 
     assert response.status == expected_status.get('status')
     assert len(data_response) == expected_status.get('length')
+
     if response.status == 404:
-        assert data_response.get('detail')[0].get('msg') == expected_status.get('msg')
+	    if isinstance(data_response['detail'], list):
+		    assert data_response['detail'][0].get('msg') == expected_status.get('msg')
+	    else:
+		    assert data_response['detail'] == expected_status.get('msg')
 
     if 'full_return' in expected_status.keys():
-        assert data_response.get('name') == expected_status.get('full_return').get('name')
-        assert data_response.get('description') == expected_status.get('full_return').get('description')
+	    assert 'name' in data_response
+	    assert 'description' in data_response
+	    assert data_response['name'] == expected_status.get('full_return').get('name')
+	    assert data_response['description'] == expected_status.get('full_return').get('description')
