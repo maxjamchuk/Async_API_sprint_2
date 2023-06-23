@@ -5,23 +5,31 @@ import uuid
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
 
-from db.elastic import get_elastic
+from db.elastic import get_elastic, ElasticAsyncSearchEngine
 from models.film import Film, Films
-from services.common import Common
+from services.abstracts import AsyncSearchEngine, BasicService
 
 
-class FilmService(Common):
+class FilmService(BasicService):
     INDEX = 'movies'
 
-    async def search_by_query(self,
-                              query: str,
-                              page_size: int,
-                              page_number: int
-                              ) -> Optional[List[Films]]:
+    def __init__(self, search_engine: AsyncSearchEngine) -> None:
+        self.search_engine = search_engine
+
+    async def get_by_search(
+        self,
+        query: str,
+        page_size: int,
+        page_number: int
+    ) -> Optional[List[Films]]:
         try:
-            films = await self._search(
+            query = self.search_engine.prepare_query(
+                type='films_by_query',
+                values=[query]
+            )
+            films = await self.search_engine.search(
                 index=self.INDEX,
-                query=self.prepare_query(type='films_by_query', values=[query]),
+                query=query,
                 from_=page_number,
                 size=page_size,
                 sort='_score'
@@ -36,34 +44,18 @@ class FilmService(Common):
 
     async def get_all(self,
                       genre: uuid.UUID,
-                      sort_param: str,                      
+                      sort_param: str,
                       page_size: int,
                       page_number: int
                       ) -> Optional[List[Films]]:
-        films = await self._get_films_from_elastic(
-            sort_param=sort_param,
-            page_size=page_size,
-            page_number=page_number,
-            genre=genre
-        )
-        if not films:
-            return None
-        return films
-
-    async def _get_films_from_elastic(self,
-                                      genre: uuid.UUID,
-                                      sort_param: str,
-                                      page_size: int,
-                                      page_number: int
-                                      ) -> Optional[List[Films]]:
         try:
-            sorting = self.prepare_sorting(sort_param=sort_param)
-            if genre:
-                query = self.prepare_query(type='films_by_genre', values=[genre])
-            else:
-                query = self.prepare_query(type='all')
+            sorting = self.search_engine.prepare_sorting(sort_param=sort_param)
 
-            result = await self._search(
+            type = 'films_by_genre' if genre else 'all'
+            values = [genre] if genre else []
+            query = self.search_engine.prepare_query(type=type, values=values)
+
+            result = await self.search_engine.search(
                 index=self.INDEX,
                 from_=page_number,
                 size=page_size,
@@ -78,26 +70,20 @@ class FilmService(Common):
                 imdb_raiting=row['_source'].get('imdb_raiting')
                 ) for row in result["hits"]["hits"]]
 
-    # get_by_id возвращает объект фильма. Он опционален, так как фильм может отсутствовать в базе
     async def get_by_id(self, film_id: uuid.UUID) -> Optional[Film]:
-        film = await self._get_film_from_elastic(film_id)
-        return film
-
-    async def _get_film_from_elastic(self, film_id: uuid.UUID) -> Optional[Film]:
-        try:
-            doc = await self.elastic.get(index=self.INDEX, id=film_id)
-        except NotFoundError:
-            return None
-
+        film = await self.search_engine.get_by_id(
+            index=self.INDEX,
+            _id=film_id
+        )
         return Film(
-            id=doc['_source'].get('id'),
-            title=doc['_source'].get('title'),
-            description=doc['_source'].get('description'),
-            imdb_raiting=doc['_source'].get('imdb_raiting'),
-            genres=doc['_source'].get('genres'),
-            actors=doc['_source'].get('actors'),
-            writers=doc['_source'].get('writers'),
-            directors=doc['_source'].get('directors')
+            id=film['_source'].get('id'),
+            title=film['_source'].get('title'),
+            description=film['_source'].get('description'),
+            imdb_raiting=film['_source'].get('imdb_raiting'),
+            genres=film['_source'].get('genres'),
+            actors=film['_source'].get('actors'),
+            writers=film['_source'].get('writers'),
+            directors=film['_source'].get('directors')
         )
 
 
@@ -105,4 +91,5 @@ class FilmService(Common):
 def get_film_service(
     elastic: AsyncElasticsearch = Depends(get_elastic)
 ) -> FilmService:
-    return FilmService(elastic)
+    search_engine = ElasticAsyncSearchEngine(elastic=elastic)
+    return FilmService(search_engine=search_engine)

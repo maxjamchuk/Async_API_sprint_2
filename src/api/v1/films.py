@@ -26,9 +26,12 @@ router = APIRouter()
 async def film_search(
     pages: Annotated[PaginateQueryParams, Depends()],
     film_service: FilmService = Depends(get_film_service),
-    query: str = Query(title="Search by text.", description="Searching by text query"),
+    query: str = Query(
+        title="Search by text.",
+        description="Searching by text query"
+    ),
 ) -> List[ShortFilm]:
-    films = await film_service.search_by_query(
+    films = await film_service.get_by_search(
         query=query,
         page_size=pages.page_size,
         page_number=pages.page_number,
@@ -60,8 +63,11 @@ async def films(
     pages: Annotated[PaginateQueryParams, Depends()],
     film_service: FilmService = Depends(get_film_service),
     genre: uuid.UUID = None,
-    sort_param: str = Query(default='-imdb_raiting', title="Sort by field.", description="Sorting by field in films"),
-    
+    sort_param: str = Query(
+        default='-imdb_raiting',
+        title="Sort by field.",
+        description="Sorting by field in films"
+    ),
 ) -> List[ShortFilm]:
     films = await film_service.get_all(
         sort_param=sort_param,
@@ -83,7 +89,6 @@ async def films(
     ) for row in films]
 
 
-# Внедряем FilmService с помощью Depends(get_film_service)
 @router.get(
     "/{film_id}",
     response_model=FilmDetail,
@@ -94,27 +99,18 @@ async def films(
 )
 @cache(expire=60)
 async def film_details(
-    film_id: uuid.UUID, #= Query(title="Page number.",description="Page number to return"), 
+    film_id: uuid.UUID,
     film_service: FilmService = Depends(get_film_service)
 ) -> FilmDetail:
 
     film = await film_service.get_by_id(film_id)
 
     if not film:
-        # Если фильм не найден, отдаём 404 статус
-        # Желательно пользоваться уже определёнными HTTP-статусами, которые содержат enum
-        # Такой код будет более поддерживаемым
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail="film not found"
         )
 
-    # Перекладываем данные из models.Film в Film
-    # Обратите внимание, что у модели бизнес-логики есть поле description
-    # Которое отсутствует в модели ответа API.
-    # Если бы использовалась общая модель для бизнес-логики и формирования ответов API
-    # вы бы предоставляли клиентам данные, которые им не нужны
-    # и, возможно, данные, которые опасно возвращать
     return FilmDetail(
         id=film.id,
         title=film.title,
