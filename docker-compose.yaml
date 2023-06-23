@@ -2,14 +2,11 @@ version: '3'
 services:
   service:
     build: .
-    ports:
-      - "8000:8000"
     depends_on:
       - elasticsearch
       - redis
     env_file:
       - .env
-    command: ["gunicorn", "--workers", "8", "--worker-class", "uvicorn.workers.UvicornWorker", "src.main:app", "--bind", "$APP_HOST:$APP_PORT"]
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
