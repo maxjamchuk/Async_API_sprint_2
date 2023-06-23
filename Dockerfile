@@ -28,3 +28,5 @@ COPY ./src ./src
 
 RUN chown -R app:app /opt/app
 USER app
+
+ENTRYPOINT gunicorn --workers 8 --worker-class uvicorn.workers.UvicornWorker src.main:app --bind $APP_HOST:$APP_PORT
