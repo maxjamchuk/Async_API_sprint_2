@@ -4,24 +4,31 @@ from typing import Optional, List
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
 
-from db.elastic import get_elastic
+from db.elastic import get_elastic, ElasticAsyncSearchEngine
 from models.film import Genres
-from services.common import Common
+from services.abstracts import AsyncSearchEngine, BasicService
 
 
-class GenreService(Common):
+class GenreService(BasicService):
     INDEX = 'genres'
 
-    async def search_by_query(
+    def __init__(self, search_engine: AsyncSearchEngine) -> None:
+        self.search_engine = search_engine
+
+    async def get_by_search(
         self,
         query: str,
         page_size: int,
         page_number: int,
     ) -> Optional[List[Genres]]:
         try:
-            result = await self._search(
+            query = self.search_engine.prepare_query(
+                type='genres_by_query',
+                values=[query]
+            ),
+            result = await self.search_engine.search(
                 index=self.INDEX,
-                query=self.prepare_query(type='genres_by_query', values=[query]),
+                query=query,
                 from_=page_number,
                 size=page_size,
                 sort='_score',
@@ -44,9 +51,9 @@ class GenreService(Common):
         page_number: int,
     ) -> Optional[List[Genres]]:
         try:
-            result = await self._search(
+            result = await self.search_engine.search(
                 index=self.INDEX,
-                query=self.prepare_query(type='all'),
+                query=self.search_engine.prepare_query(type='all'),
                 from_=page_number,
                 size=page_size,
             )
@@ -61,15 +68,11 @@ class GenreService(Common):
         ]
 
     async def get_by_id(self, genre_id: str) -> Optional[Genres]:
-        genre = await self._get_genre_from_elastic(genre_id)
-        if not genre:
-            return None
-
-        return genre
-
-    async def _get_genre_from_elastic(self, genre_id: str) -> Optional[Genres]:
         try:
-            doc = await self.elastic.get(index=self.INDEX, id=genre_id)
+            doc = await self.search_engine.get_by_id(
+                index=self.INDEX,
+                _id=genre_id
+            )
         except NotFoundError:
             return None
 
@@ -80,4 +83,5 @@ class GenreService(Common):
 def get_genre_service(
     elastic: AsyncElasticsearch = Depends(get_elastic),
 ) -> GenreService:
-    return GenreService(elastic)
+    search_engine = ElasticAsyncSearchEngine(elastic=elastic)
+    return GenreService(search_engine=search_engine)

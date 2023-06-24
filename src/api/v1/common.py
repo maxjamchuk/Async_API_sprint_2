@@ -1,5 +1,6 @@
 from fastapi import Query
 
+
 class PaginateQueryParams:
     def __init__(
         self,
