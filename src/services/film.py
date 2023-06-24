@@ -2,7 +2,7 @@ from functools import lru_cache
 from typing import Optional, List
 import uuid
 
-from elasticsearch import AsyncElasticsearch, NotFoundError
+from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
 
 from db.elastic import get_elastic, ElasticAsyncSearchEngine
@@ -22,19 +22,18 @@ class FilmService(BasicService):
         page_size: int,
         page_number: int
     ) -> Optional[List[Films]]:
-        try:
-            query = self.search_engine.prepare_query(
-                type='films_by_query',
-                values=[query]
-            )
-            films = await self.search_engine.search(
-                index=self.INDEX,
-                query=query,
-                from_=page_number,
-                size=page_size,
-                sort='_score'
-            )
-        except NotFoundError:
+        query = self.search_engine.prepare_query(
+            type='films_by_query',
+            values=[query]
+        )
+        films = await self.search_engine.search(
+            index=self.INDEX,
+            query=query,
+            from_=page_number,
+            size=page_size,
+            sort='_score'
+        )
+        if films is None:
             return None
         return [Films(
                 id=row['_source'].get('id'),
@@ -48,21 +47,20 @@ class FilmService(BasicService):
                       page_size: int,
                       page_number: int
                       ) -> Optional[List[Films]]:
-        try:
-            sorting = self.search_engine.prepare_sorting(sort_param=sort_param)
+        sorting = self.search_engine.prepare_sorting(sort_param=sort_param)
 
-            type = 'films_by_genre' if genre else 'all'
-            values = [genre] if genre else []
-            query = self.search_engine.prepare_query(type=type, values=values)
+        type = 'films_by_genre' if genre else 'all'
+        values = [genre] if genre else []
+        query = self.search_engine.prepare_query(type=type, values=values)
 
-            result = await self.search_engine.search(
-                index=self.INDEX,
-                from_=page_number,
-                size=page_size,
-                query=query,
-                sort=sorting
-            )
-        except NotFoundError:
+        result = await self.search_engine.search(
+            index=self.INDEX,
+            from_=page_number,
+            size=page_size,
+            query=query,
+            sort=sorting
+        )
+        if result is None:
             return None
         return [Films(
                 id=row['_source'].get('id'),
@@ -75,6 +73,8 @@ class FilmService(BasicService):
             index=self.INDEX,
             _id=film_id
         )
+        if film is None:
+            return None
         return Film(
             id=film['_source'].get('id'),
             title=film['_source'].get('title'),

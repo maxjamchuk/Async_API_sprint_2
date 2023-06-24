@@ -17,6 +17,7 @@ class TestSettings(BaseSettings):
     # Настройки Redis
     redis_host: str = os.getenv("REDIS_HOST", "127.0.0.1")
     redis_port: int = int(os.getenv("REDIS_PORT", 6379))
+    redis_db_test: int = int(os.getenv("REDIS_DB_TEST", 6))
     # Настройки Elasticsearch
     elastic_host: str = os.getenv("ELASTIC_HOST", "127.0.0.1")
     elastic_port: int = int(os.getenv("ELASTIC_PORT", 9200))

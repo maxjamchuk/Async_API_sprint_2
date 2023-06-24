@@ -2,7 +2,7 @@ from functools import lru_cache
 from typing import Optional, List, Dict
 import uuid
 
-from elasticsearch import AsyncElasticsearch, NotFoundError
+from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
 
 from db.elastic import get_elastic, ElasticAsyncSearchEngine
@@ -23,65 +23,60 @@ class PersonService(BasicService):
         page_size: int,
         page_number: int,
     ) -> Optional[List[Person]]:
-        try:
+        query = self.search_engine.prepare_query(
+            type='persons_by_query',
+            values=[query]
+        )
+        persons = await self.search_engine.search(
+            index=self.INDEX,
+            query=query,
+            from_=page_number,
+            size=page_size,
+            sort='_score',
+        )
+
+        person_ids = [
+            str(
+                row['_source'].get('id')
+            ) for row in persons["hits"]["hits"]
+        ]
+        if len(person_ids):
             query = self.search_engine.prepare_query(
-                type='persons_by_query',
-                values=[query]
+                type='films_by_persons',
+                values=person_ids
             )
-            persons = await self.search_engine.search(
-                index=self.INDEX,
+            films = await self.search_engine.search(
+                index='movies',
                 query=query,
-                from_=page_number,
-                size=page_size,
-                sort='_score',
             )
 
-            person_ids = [
-                str(
-                    row['_source'].get('id')
-                ) for row in persons["hits"]["hits"]
-            ]
-            if len(person_ids):
-                query = self.search_engine.prepare_query(
-                    type='films_by_persons',
-                    values=person_ids
-                )
-                films = await self.search_engine.search(
-                    index='movies',
-                    query=query,
-                )
+            result = []
+            for per in persons["hits"]["hits"]:
 
-                result = []
-                for per in persons["hits"]["hits"]:
+                per_id = per['_source'].get('id')
+                full_name = per['_source'].get('full_name')
+                new_films = self._create_roles_list(
+                        person_id=per_id,
+                        source=films['hits']['hits']
+                    )
 
-                    per_id = per['_source'].get('id')
-                    full_name = per['_source'].get('full_name')
-                    new_films = self._create_roles_list(
-                            person_id=per_id,
-                            source=films['hits']['hits']
-                        )
-
-                    result.append(Person(
-                        uuid=per_id,
-                        full_name=full_name,
-                        films=new_films,
-                    ))
-                return result
-            return None
-        except NotFoundError:
-            return None
+                result.append(Person(
+                    uuid=per_id,
+                    full_name=full_name,
+                    films=new_films,
+                ))
+            return result
+        return None
 
     async def get_by_id(self, person_id: uuid.UUID) -> Optional[Person]:
-        try:
-            doc = await self.search_engine.get_by_id(
-                index=self.INDEX,
-                _id=person_id
-            )
-            person_id = doc['_source'].get('id', None)
-            full_name = doc['_source'].get('full_name', None)
-        except NotFoundError:
+        doc = await self.search_engine.get_by_id(
+            index=self.INDEX,
+            _id=person_id
+        )
+        if doc is None:
             return None
-
+        person_id = doc['_source'].get('id', None)
+        full_name = doc['_source'].get('full_name', None)
         films = await self.find_films_roles(person_id=person_id)
         return Person(
             uuid=person_id,
@@ -114,18 +109,17 @@ class PersonService(BasicService):
         page_size: int,
         page_number: int,
     ) -> Optional[List[Films]]:
-        try:
-            query = self.search_engine.prepare_query(
-                type='films_by_person',
-                values=[person_id]
-            )
-            films = await self.search_engine.search(
-                index='movies',
-                query=query,
-                from_=page_number,
-                size=page_size,
-            )
-        except NotFoundError:
+        query = self.search_engine.prepare_query(
+            type='films_by_person',
+            values=[person_id]
+        )
+        films = await self.search_engine.search(
+            index='movies',
+            query=query,
+            from_=page_number,
+            size=page_size,
+        )
+        if films is None:
             return None
         return [Films(
                 id=row['_source'].get('id'),

@@ -4,6 +4,7 @@ import aiohttp
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
 from typing import List
+from redis import Redis
 
 from .settings import test_settings as sett
 
@@ -49,4 +50,17 @@ def make_get_request(http_client: aiohttp.ClientSession):
     async def inner(query: str, params: dict):
         response = await http_client.get(query, params=params)
         return response
+    return inner
+
+
+@pytest.fixture(scope='function')
+def set_get_cache():
+    def inner(key: str, value: str):
+        client = Redis(
+            host=sett.redis_host,
+            port=sett.redis_port,
+            db=sett.redis_db_test
+        )
+        client.set(key, value)
+        return client.get(key)
     return inner
