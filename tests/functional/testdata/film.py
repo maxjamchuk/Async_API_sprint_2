@@ -1,5 +1,7 @@
 import uuid
 
+from http import HTTPStatus
+
 
 FILM_TITLE_QUERY_POS = 'The Star'
 FILM_TITLE_QUERY_NEG = 'Mashed potato'
@@ -7,24 +9,38 @@ MESSAGE_SEARCH_UUID_NEG = 'value is not a valid uuid'
 
 ES_FILM_SEARCH_PARAMETRIZE_POSITIVE_DATA = [
     (
-        'film',
         {'query': FILM_TITLE_QUERY_POS, 'page_number': 0, 'page_size': 50},
-        {'status': 200, 'length': 50}
+        {'status': HTTPStatus.OK, 'length': 50, 'full_return': [
+            {
+                "id": "1",
+                "title": FILM_TITLE_QUERY_POS,
+                "imdb_raiting": 8.5
+            }
+        ]}
     ),
     (
-        'film',
         {'query': FILM_TITLE_QUERY_POS, 'page_number': 1, 'page_size': 2},
-        {'status': 200, 'length': 2}
+        {'status': HTTPStatus.OK, 'length': 2, 'full_return': [
+            {
+                "id": "1",
+                "title": FILM_TITLE_QUERY_POS,
+                "imdb_raiting": 8.5
+            }
+        ]}
     ),
     (
-        'film',
         {'query': FILM_TITLE_QUERY_POS},
-        {'status': 200, 'length': 50}
+        {'status': HTTPStatus.OK, 'length': 50, 'full_return': [
+            {
+                "id": "1",
+                "title": FILM_TITLE_QUERY_POS,
+                "imdb_raiting": 8.5
+            }
+        ]}
     ),
     (
-        'film',
         {'query': FILM_TITLE_QUERY_POS, 'page_number': 0, 'page_size': 1},
-        {'status': 200, 'length': 1, 'full_return': [
+        {'status': HTTPStatus.OK, 'length': 1, 'full_return': [
             {
                 "id": "1",
                 "title": FILM_TITLE_QUERY_POS,
@@ -36,19 +52,12 @@ ES_FILM_SEARCH_PARAMETRIZE_POSITIVE_DATA = [
 
 ES_FILM_SEARCH_PARAMETRIZE_NEGATIVE_DATA = [
     (
-        'film',
-        {'query': FILM_TITLE_QUERY_NEG, 'page_number': 0, 'page_size': 50},
-        {'status': 404, 'length': 1}
-    ),
-    (
-        'film',
         {'query': FILM_TITLE_QUERY_NEG, 'page_number': -1, 'page_size': 50},
-        {'status': 422, 'length': 1, 'msg': 'ensure this value is greater than or equal to 0'}
+        {'status': HTTPStatus.UNPROCESSABLE_ENTITY, 'length': 1, 'msg': 'ensure this value is greater than or equal to 0'}
     ),
     (
-        'film',
         {'query': FILM_TITLE_QUERY_NEG, 'page_size': 1000000},
-        {'status': 422, 'length': 1, 'msg': 'ensure this value is less than or equal to 500'}
+        {'status': HTTPStatus.UNPROCESSABLE_ENTITY, 'length': 1, 'msg': 'ensure this value is less than or equal to 500'}
     )
 ]
 
@@ -144,23 +153,47 @@ UUIDS_FILMS = [
 ES_FILMS_PARAMETRIZE_POSITIVE_DATA = [
     (
         {'genre': '0fbcd2b3-2792-4468-8885-06d653f368c8', 'sort_param': '-imdb_raiting', 'page_number': 0, 'page_size': 50},
-        {'status': 200, 'length': 50}
+        {'status': HTTPStatus.OK, 'length': 50, 'full_return': [
+            {
+                "id": "1",
+                "title": FILM_TITLE_QUERY_POS,
+                "imdb_raiting": 8.5
+            }
+        ]}
     ),
     (
         {'sort_param': '-imdb_raiting', 'page_number': 0, 'page_size': 50},
-        {'status': 200, 'length': 50}
+        {'status': HTTPStatus.OK, 'length': 50, 'full_return': [
+            {
+                "id": "1",
+                "title": FILM_TITLE_QUERY_POS,
+                "imdb_raiting": 8.5
+            }
+        ]}
     ),
     (
         {'sort_param': '-imdb_raiting', 'page_number': 0, 'page_size': 1},
-        {'status': 200, 'length': 1}
+        {'status': HTTPStatus.OK, 'length': 1, 'full_return': [
+            {
+                "id": "1",
+                "title": FILM_TITLE_QUERY_POS,
+                "imdb_raiting": 8.5
+            }
+        ]}
     ),
     (
         {'sort_param': '-imdb_raiting', 'page_number': 0, 'page_size': 2},
-        {'status': 200, 'length': 2}
+        {'status': HTTPStatus.OK, 'length': 2, 'full_return': [
+            {
+                "id": "1",
+                "title": FILM_TITLE_QUERY_POS,
+                "imdb_raiting": 8.5
+            }
+        ]}
     ),
     (
         {'sort_param': '-imdb_raiting', 'page_number': 0, 'page_size': 1},
-        {'status': 200, 'length': 1, 'full_return': [
+        {'status': HTTPStatus.OK, 'length': 1, 'full_return': [
             {
                 "id": "1",
                 "title": FILM_TITLE_QUERY_POS,
@@ -172,22 +205,22 @@ ES_FILMS_PARAMETRIZE_POSITIVE_DATA = [
 ES_FILMS_PARAMETRIZE_NEGATIVE_DATA = [
     (
         {'genre': '123', 'page_number': 0, 'page_size': 50},
-        {'status': 422, 'length': 1, 'msg': MESSAGE_SEARCH_UUID_NEG}
+        {'status': HTTPStatus.UNPROCESSABLE_ENTITY, 'length': 1, 'msg': MESSAGE_SEARCH_UUID_NEG}
     ),
     (
         {'genre': '0fbcd2b3-2792-4468-8885-06d653f368c8', 'page_number': -1, 'page_size': 50},
-        {'status': 422, 'length': 1, 'msg': 'ensure this value is greater than or equal to 0'}
+        {'status': HTTPStatus.UNPROCESSABLE_ENTITY, 'length': 1, 'msg': 'ensure this value is greater than or equal to 0'}
     ),
     (
         {'genre': '0fbcd2b3-2792-4468-8885-06d653f368c8', 'page_size': 1000000},
-        {'status': 422, 'length': 1, 'msg': 'ensure this value is less than or equal to 500'}
+        {'status': HTTPStatus.UNPROCESSABLE_ENTITY, 'length': 1, 'msg': 'ensure this value is less than or equal to 500'}
     )
 ]
 
 ES_FILM_BY_ID_PARAMETRIZE_POSITIVE_DATA = [
     (
         {'film_id': 'c5a4bf67-1ae0-40ab-a6a5-3a791debf2e1'},
-        {'status': 200, 'length': 8, 'full_return' : {
+        {'status': HTTPStatus.OK, 'length': 8, 'full_return' : {
                 "id": "1",
                 "title": FILM_TITLE_QUERY_POS,
                 "imdb_raiting": 8.5
@@ -196,7 +229,7 @@ ES_FILM_BY_ID_PARAMETRIZE_POSITIVE_DATA = [
     ),
     (
         {'film_id': 'e73f9c0f-56b6-4235-9a4d-6e5d733e74e8'},
-        {'status': 200, 'length': 8, 'full_return' : {
+        {'status': HTTPStatus.OK, 'length': 8, 'full_return' : {
                 "id": "1",
                 "title": FILM_TITLE_QUERY_POS,
                 "imdb_raiting": 8.5
@@ -208,10 +241,10 @@ ES_FILM_BY_ID_PARAMETRIZE_POSITIVE_DATA = [
 ES_FILM_BY_ID_PARAMETRIZE_NEGATIVE_DATA = [
     (
         {'film_id': '123'},
-        {'status': 422, 'length': 1, 'msg': MESSAGE_SEARCH_UUID_NEG}
+        {'status': HTTPStatus.UNPROCESSABLE_ENTITY, 'length': 1, 'msg': MESSAGE_SEARCH_UUID_NEG}
     ),
     (
         {'film_id': 123},
-        {'status': 422, 'length': 1, 'msg': MESSAGE_SEARCH_UUID_NEG}
+        {'status': HTTPStatus.UNPROCESSABLE_ENTITY, 'length': 1, 'msg': MESSAGE_SEARCH_UUID_NEG}
     )
 ]

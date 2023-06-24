@@ -1,3 +1,5 @@
+import uuid
+
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -51,7 +53,7 @@ async def get_all_genres(
 )
 @cache(expire=settings.redis_cache_expires)
 async def get_genre_by_id(
-    genre_id: str,
+    genre_id: uuid.UUID,
     genre_service: GenreService = Depends(get_genre_service),
 ) -> Genres:
     genre = await genre_service.get_by_id(genre_id)
